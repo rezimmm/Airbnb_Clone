@@ -137,7 +137,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use(multer(multerOptions).single('photo'));
 
 // ✅ NEW (ACTIVE)
-app.use(upload.single("photo"));
+// app.use(upload.single("photo"));
 
 app.use(express.static(path.join(rootDir, 'public')));
 
