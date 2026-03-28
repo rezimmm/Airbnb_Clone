@@ -11,6 +11,10 @@ const multer = require('multer');
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 
+// ✅ NEW: Cloudinary
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("./utils/cloudinary");
+
 // Local Module
 const storeRouter = require("./routes/storeRouter");
 const hostRouter = require("./routes/hostRouter");
@@ -23,13 +27,12 @@ const app = express();
 // ✅ HIDE EXPRESS HEADER
 app.disable("x-powered-by");
 
-// ✅ CHECK ENV VARIABLE FIRST (VERY IMPORTANT)
+// ✅ CHECK ENV VARIABLE FIRST
 if (!process.env.DB_PATH) {
   console.log("❌ ERROR: DB_PATH is missing in environment variables");
   process.exit(1);
 }
 
-// ✅ USE DIRECT ENV VALUE
 const DB_PATH = process.env.DB_PATH;
 
 // ✅ SESSION STORE
@@ -38,7 +41,7 @@ const store = new MongoDBStore({
   collection: 'sessions'
 });
 
-// ✅ TRUST PROXY (IMPORTANT FOR RENDER)
+// ✅ TRUST PROXY
 app.set('trust proxy', 1);
 
 // ✅ FORCE HTTPS
@@ -61,7 +64,7 @@ app.use(helmet({
   }
 }));
 
-// ✅ RATE LIMITING (ANTI-DDOS)
+// ✅ RATE LIMITING
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100
@@ -71,7 +74,7 @@ app.use(limiter);
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// ✅ RANDOM STRING FUNCTION
+// ✅ RANDOM STRING FUNCTION (KEPT)
 const randomString = (length) => {
   const characters = 'abcdefghijklmnopqrstuvwxyz';
   let result = '';
@@ -81,7 +84,10 @@ const randomString = (length) => {
   return result;
 };
 
-// ✅ MULTER STORAGE
+//////////////////////////////////////////////////////////////////
+// ❌ OLD LOCAL STORAGE (KEPT BUT UNUSED)
+//////////////////////////////////////////////////////////////////
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -91,7 +97,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// ✅ FILE FILTER (IMPROVED)
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
 
@@ -102,22 +107,46 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// ✅ MULTER OPTIONS (SIZE LIMIT ADDED)
 const multerOptions = {
   storage,
   fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 } // 2MB
+  limits: { fileSize: 2 * 1024 * 1024 }
 };
 
+//////////////////////////////////////////////////////////////////
+// ✅ NEW CLOUDINARY STORAGE (ACTIVE)
+//////////////////////////////////////////////////////////////////
+
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "airbnb-clone",
+    allowed_formats: ["jpg", "png", "jpeg"],
+  },
+});
+
+const upload = multer({ storage: cloudinaryStorage });
+
+//////////////////////////////////////////////////////////////////
 // ✅ MIDDLEWARE
+//////////////////////////////////////////////////////////////////
+
 app.use(express.urlencoded({ extended: true }));
-app.use(multer(multerOptions).single('photo'));
+
+// ❌ OLD (DISABLED BUT KEPT)
+// app.use(multer(multerOptions).single('photo'));
+
+// ✅ NEW (ACTIVE)
+app.use(upload.single("photo"));
+
 app.use(express.static(path.join(rootDir, 'public')));
+
+// (KEPT - SAFE EVEN IF UNUSED)
 app.use("/uploads", express.static(path.join(rootDir, 'uploads')));
 app.use("/host/uploads", express.static(path.join(rootDir, 'uploads')));
 app.use("/homes/uploads", express.static(path.join(rootDir, 'uploads')));
 
-// ✅ SESSION (SECURED)
+// ✅ SESSION
 app.use(session({
   secret: process.env.SESSION_SECRET || "supersecret",
   resave: false,
@@ -125,7 +154,7 @@ app.use(session({
   store,
   cookie: {
     httpOnly: true,
-    secure: true,   // 🔥 important for HTTPS
+    secure: true,
     sameSite: "lax"
   }
 }));
@@ -154,10 +183,10 @@ app.use("/host", hostRouter);
 // ✅ 404
 app.use(errorsController.pageNotFound);
 
-// ✅ PORT FIX (RENDER READY)
+// ✅ PORT
 const PORT = process.env.PORT || 3003;
 
-// ✅ DB CONNECTION + SERVER START
+// ✅ DB + SERVER
 mongoose.connect(DB_PATH)
   .then(() => {
     console.log('✅ Connected to MongoDB');
