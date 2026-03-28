@@ -1,19 +1,16 @@
 // Core Module
 const path = require('path');
-require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config();
+}
 
 // External Module
 const express = require('express');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const { default: mongoose } = require('mongoose');
-const multer = require('multer');
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-
-// ✅ NEW: Cloudinary
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("./utils/cloudinary");
 
 // Local Module
 const storeRouter = require("./routes/storeRouter");
@@ -88,14 +85,6 @@ const randomString = (length) => {
 // ❌ OLD LOCAL STORAGE (KEPT BUT UNUSED)
 //////////////////////////////////////////////////////////////////
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, randomString(10) + '-' + file.originalname);
-  }
-});
 
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
@@ -107,25 +96,9 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const multerOptions = {
-  storage,
-  fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 }
-};
-
 //////////////////////////////////////////////////////////////////
 // ✅ NEW CLOUDINARY STORAGE (ACTIVE)
-//////////////////////////////////////////////////////////////////
-
-const cloudinaryStorage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "airbnb-clone",
-    allowed_formats: ["jpg", "png", "jpeg"],
-  },
-});
-
-const upload = multer({ storage: cloudinaryStorage });
+/////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////
 // ✅ MIDDLEWARE
