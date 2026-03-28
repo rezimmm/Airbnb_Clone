@@ -72,48 +72,67 @@ exports.postAddHome = (req, res, next) => {
 };
 
 exports.postEditHome = (req, res, next) => {
-  const { id, houseName, price, location, rating, description } =
-    req.body;;
+  const { id, houseName, price, location, rating, description } = req.body;
+
   Home.findById(id)
     .then((home) => {
+      if (!home) {
+        return res.redirect("/host/host-home-list");
+      }
+
       home.houseName = houseName;
       home.price = price;
       home.location = location;
       home.rating = rating;
       home.description = description;
 
+      // ✅ HANDLE IMAGE SAFELY
       if (req.file) {
-        fs.unlink(home.photo, (err) => {
-          if (err) {
-            console.log("Error while deleting file ", err);
-          }
-        });
+        // delete old image ONLY if it exists
+        if (home.photo && fs.existsSync(home.photo)) {
+          fs.unlink(home.photo, (err) => {
+            if (err) {
+              console.log("Error while deleting file ", err);
+            }
+          });
+        }
+
+        // update new image
         home.photo = req.file.path;
       }
 
-      home
-        .save()
-        .then((result) => {
-          console.log("Home updated ", result);
-        })
-        .catch((err) => {
-          console.log("Error while updating ", err);
-        });
+      return home.save();
+    })
+    .then(() => {
+      console.log("Home updated successfully");
       res.redirect("/host/host-home-list");
     })
     .catch((err) => {
-      console.log("Error while finding home ", err);
+      console.log("Error while updating ", err);
+      res.status(500).send("Internal Server Error");
     });
 };
 
 exports.postDeleteHome = (req, res, next) => {
   const homeId = req.params.homeId;
-  console.log("Came to delete ", homeId);
-  Home.findByIdAndDelete(homeId)
+
+  Home.findById(homeId)
+    .then((home) => {
+      if (!home) return res.redirect("/host/host-home-list");
+
+      // delete image safely
+      if (home.photo && fs.existsSync(home.photo)) {
+        fs.unlink(home.photo, (err) => {
+          if (err) console.log(err);
+        });
+      }
+
+      return Home.findByIdAndDelete(homeId);
+    })
     .then(() => {
       res.redirect("/host/host-home-list");
     })
-    .catch((error) => {
-      console.log("Error while deleting ", error);
+    .catch((err) => {
+      console.log("Error while deleting ", err);
     });
 };
