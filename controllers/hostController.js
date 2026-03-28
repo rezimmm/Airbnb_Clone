@@ -1,4 +1,5 @@
 const Home = require("../models/home");
+const fs = require("fs"); // ✅ ADD THIS
 
 exports.getAddHome = (req, res, next) => {
   res.render("host/edit-home", {
@@ -46,14 +47,14 @@ exports.getHostHomes = (req, res, next) => {
 
 exports.postAddHome = (req, res, next) => {
   const { houseName, price, location, rating, description } = req.body;
-  console.log(houseName, price, location, rating, description);
+
   console.log(req.file);
 
   if (!req.file) {
     return res.status(422).send("No image provided");
   }
 
-  const photo = req.file.path;
+  const photo = req.file.path; // ✅ Cloudinary URL comes here
 
   const home = new Home({
     houseName,
@@ -63,8 +64,9 @@ exports.postAddHome = (req, res, next) => {
     photo,
     description,
   });
+
   home.save().then(() => {
-    console.log("Home Saved successfully");
+    console.log("✅ Home Saved successfully");
   });
 
   res.redirect("/host/host-home-list");
@@ -87,8 +89,9 @@ exports.postEditHome = (req, res, next) => {
       home.description = description;
 
       if (req.file) {
-        // delete old image safely
-        if (home.photo && fs.existsSync(home.photo)) {
+
+        // ✅ DELETE ONLY IF LOCAL FILE
+        if (home.photo && !home.photo.startsWith("http") && fs.existsSync(home.photo)) {
           fs.unlink(home.photo, (err) => {
             if (err) {
               console.log("Error while deleting file ", err);
@@ -96,13 +99,13 @@ exports.postEditHome = (req, res, next) => {
           });
         }
 
-        home.photo = req.file.path;
+        home.photo = req.file.path; // ✅ Cloudinary URL
       }
 
       return home.save();
     })
     .then(() => {
-      console.log("Home updated successfully");
+      console.log("✅ Home updated successfully");
       res.redirect("/host/host-home-list");
     })
     .catch((err) => {
@@ -118,7 +121,8 @@ exports.postDeleteHome = (req, res, next) => {
     .then((home) => {
       if (!home) return res.redirect("/host/host-home-list");
 
-      if (home.photo && fs.existsSync(home.photo)) {
+      // ✅ DELETE ONLY LOCAL FILE
+      if (home.photo && !home.photo.startsWith("http") && fs.existsSync(home.photo)) {
         fs.unlink(home.photo, (err) => {
           if (err) console.log(err);
         });
