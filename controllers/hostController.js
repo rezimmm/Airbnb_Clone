@@ -74,7 +74,10 @@ exports.postAddHome = async (req, res) => {
     res.redirect("/host/host-home-list");
 
   } catch (err) {
-    console.log("❌ ERROR IN ADD HOME:", err);
+    console.log("❌ FULL ERROR:", err);
+    console.log("❌ ERROR MESSAGE:", err.message);
+    console.log("❌ ERROR STACK:", err.stack);
+
     res.status(500).send(err.message);
   }
 };
