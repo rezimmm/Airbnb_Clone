@@ -78,7 +78,10 @@ exports.postAddHome = async (req, res) => {
     console.log("❌ ERROR MESSAGE:", err.message);
     console.log("❌ ERROR STACK:", err.stack);
 
-    res.status(500).send(err.message);
+    res.status(500).json({
+      error: err.message,
+      stack: err.stack
+    });
   }
 };
 
