@@ -98,12 +98,6 @@ const fileFilter = (req, file, cb) => {
 
 app.use(express.urlencoded({ extended: true }));
 
-// ❌ OLD (DISABLED BUT KEPT)
-// app.use(multer(multerOptions).single('photo'));
-
-// ✅ NEW (ACTIVE)
-// app.use(upload.single("photo"));
-
 app.use(express.static(path.join(rootDir, 'public')));
 
 // (KEPT - SAFE EVEN IF UNUSED)
@@ -147,6 +141,11 @@ app.use("/host", hostRouter);
 
 // ✅ 404
 app.use(errorsController.pageNotFound);
+
+app.use((err, req, res, next) => {
+  console.log("🔥 GLOBAL ERROR:", err);
+  res.status(500).send(err.message);
+});
 
 // ✅ PORT
 const PORT = process.env.PORT || 3003;
