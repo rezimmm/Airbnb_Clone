@@ -19,6 +19,11 @@ const homeSchema = mongoose.Schema({
   },
   photo: String,
   description: String,
+  category: {
+    type: String,
+    enum: ['all', 'beachside', 'views', 'trending', 'arctic', 'cabins', 'luxe'],
+    default: 'all'
+  }
 });
 
 // homeSchema.pre('findOneAndDelete', async function(next) {

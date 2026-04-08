@@ -62,6 +62,19 @@
                 class="input-premium"
                 required/>
             </div>
+
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-surface-500 mb-2 ml-1">Property Category</label>
+              <select name="category" class="input-premium appearance-none bg-white cursor-pointer" required>
+                <option value="all" <%= editing && home.category === 'all' ? 'selected' : '' %>>All Homes</option>
+                <option value="beachside" <%= editing && home.category === 'beachside' ? 'selected' : '' %>>Beachside</option>
+                <option value="views" <%= editing && home.category === 'views' ? 'selected' : '' %>>Amazing Views</option>
+                <option value="trending" <%= editing && home.category === 'trending' ? 'selected' : '' %>>Trending</option>
+                <option value="arctic" <%= editing && home.category === 'arctic' ? 'selected' : '' %>>Arctic</option>
+                <option value="cabins" <%= editing && home.category === 'cabins' ? 'selected' : '' %>>Cabins</option>
+                <option value="luxe" <%= editing && home.category === 'luxe' ? 'selected' : '' %>>Luxe</option>
+              </select>
+            </div>
           </div>
 
           <div>

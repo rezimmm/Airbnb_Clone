@@ -47,7 +47,7 @@ exports.getHostHomes = (req, res) => {
 
 exports.postAddHome = async (req, res) => {
   try {
-    const { houseName, price, location, rating, description } = req.body;
+    const { houseName, price, location, rating, description, category } = req.body;
 
     console.log("BODY:", req.body);
     console.log("FILE:", req.file);
@@ -65,6 +65,7 @@ exports.postAddHome = async (req, res) => {
       rating,
       photo,
       description,
+      category,
     });
 
     await home.save();
@@ -87,7 +88,7 @@ exports.postAddHome = async (req, res) => {
 
 exports.postEditHome = async (req, res) => {
   try {
-    const { id, houseName, price, location, rating, description } = req.body;
+    const { id, houseName, price, location, rating, description, category } = req.body;
 
     const home = await Home.findById(id);
 
@@ -101,6 +102,7 @@ exports.postEditHome = async (req, res) => {
     home.location = location;
     home.rating = rating;
     home.description = description;
+    home.category = category;
 
     if (req.file) {
 

@@ -135,7 +135,10 @@
               </div>
             </div>
 
-            <button class="w-full btn-primary py-3.5 mb-4 text-lg font-bold">Reserve</button>
+            <form action="/reserve" method="POST">
+              <input type="hidden" name="homeId" value="<%= home._id %>">
+              <button type="submit" class="w-full btn-primary py-3.5 mb-4 text-lg font-bold">Reserve</button>
+            </form>
             <p class="text-center text-sm text-surface-400 mb-6">You won't be charged yet</p>
 
             <div class="space-y-4 text-surface-600 border-b border-surface-100 pb-4 mb-4">
@@ -155,7 +158,13 @@
             </div>
 
             <div class="mt-6 pt-6 border-t border-surface-100">
-              <%- include('../partials/favourite') %>
+              <form action="/favourites" method="POST">
+                <input type="hidden" name="id" value="<%= home._id %>" />
+                <button type="submit" class="flex items-center gap-2 btn-outline w-full justify-center group <%= isFavourite ? 'bg-surface-50 border-brand' : '' %>">
+                  <i class="fa-heart group-hover:text-brand transition-colors text-lg <%= isFavourite ? 'fa-solid text-brand' : 'fa-regular' %>"></i>
+                  <span><%= isFavourite ? 'Saved to Favourites' : 'Save to Favourites' %></span>
+                </button>
+              </form>
             </div>
           </div>
         </div>

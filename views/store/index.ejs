@@ -6,34 +6,34 @@
     <!-- Category Slide Bar -->
     <div class="sticky top-[73px] z-40 bg-white/95 backdrop-blur-sm border-b border-surface-100 py-4 mb-8">
       <div class="container mx-auto px-4 overflow-x-auto no-scrollbar flex items-center gap-10">
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-surface-900 pb-2">
-          <i class="fa-solid fa-house-chimney text-xl text-surface-900"></i>
-          <span class="text-xs font-semibold text-surface-900 uppercase tracking-wider">All Homes</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-water text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Beachside</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-mountain-sun text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Amazing Views</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-fire text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Trending</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-snowflake text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Arctic</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-tree text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Cabins</span>
-        </div>
-        <div class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 border-transparent hover:border-surface-300 pb-2 transition-all">
-          <i class="fa-solid fa-crown text-xl text-surface-400 group-hover:text-surface-600 transition-colors"></i>
-          <span class="text-xs font-medium text-surface-400 group-hover:text-surface-600 uppercase tracking-wider">Luxe</span>
-        </div>
+        <a href="/?category=all" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'all' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-house-chimney text-xl <%= currentCategory === 'all' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'all' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">All Homes</span>
+        </a>
+        <a href="/?category=beachside" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'beachside' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-water text-xl <%= currentCategory === 'beachside' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'beachside' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Beachside</span>
+        </a>
+        <a href="/?category=views" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'views' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-mountain-sun text-xl <%= currentCategory === 'views' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'views' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Amazing Views</span>
+        </a>
+        <a href="/?category=trending" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'trending' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-fire text-xl <%= currentCategory === 'trending' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'trending' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Trending</span>
+        </a>
+        <a href="/?category=arctic" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'arctic' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-snowflake text-xl <%= currentCategory === 'arctic' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'arctic' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Arctic</span>
+        </a>
+        <a href="/?category=cabins" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'cabins' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-tree text-xl <%= currentCategory === 'cabins' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'cabins' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Cabins</span>
+        </a>
+        <a href="/?category=luxe" class="flex flex-col items-center gap-2 cursor-pointer group border-b-2 pb-2 transition-all <%= currentCategory === 'luxe' ? 'border-surface-900' : 'border-transparent hover:border-surface-300' %>">
+          <i class="fa-solid fa-crown text-xl <%= currentCategory === 'luxe' ? 'text-surface-900' : 'text-surface-400 group-hover:text-surface-600' %>"></i>
+          <span class="text-xs <%= currentCategory === 'luxe' ? 'font-bold text-surface-900' : 'font-medium text-surface-400 group-hover:text-surface-600' %> uppercase tracking-wider">Luxe</span>
+        </a>
       </div>
     </div>
 
@@ -45,11 +45,14 @@
             <div class="relative aspect-square mb-3 overflow-hidden rounded-2xl">
               <img src="<%= home.photo %>" alt="<%= home.houseName %>" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
               
-              <!-- Badge -->
-              <div class="absolute top-3 right-3">
-                <button class="text-white/80 hover:text-brand transition-colors text-2xl drop-shadow-md">
-                  <i class="fa-solid fa-heart"></i>
-                </button>
+              <!-- Favorite Toggle -->
+              <div class="absolute top-3 right-3 z-10">
+                <form action="/favourites" method="POST">
+                  <input type="hidden" name="id" value="<%= home._id %>" />
+                  <button type="submit" class="transition-transform active:scale-90 group/heart">
+                    <i class="fa-solid fa-heart text-2xl drop-shadow-md transition-colors <%= home.isFavourite ? 'text-brand' : 'text-black/50 hover:text-black/70' %>"></i>
+                  </button>
+                </form>
               </div>
 
               <% if (home.rating >= 4.5) { %>
