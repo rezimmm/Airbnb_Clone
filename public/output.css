@@ -849,6 +849,10 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 0.5rem;
 }
 
+.mt-0\.5 {
+  margin-top: 0.125rem;
+}
+
 .mt-1 {
   margin-top: 0.25rem;
 }
@@ -859,6 +863,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .mt-3 {
   margin-top: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
 }
 
 .mt-6 {
@@ -995,6 +1003,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .max-w-\[2520px\] {
   max-width: 2520px;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .max-w-md {
@@ -1520,10 +1532,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .pr-2 {
   padding-right: 0.5rem;
-}
-
-.pr-4 {
-  padding-right: 1rem;
 }
 
 .pt-1 {
