@@ -14,7 +14,7 @@ const hostController = require("../controllers/hostController");
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "airbnb-clone",
+    folder: "aurastay",
     allowed_formats: ["jpg", "png", "jpeg"],
   },
 });
