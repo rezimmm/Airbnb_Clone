@@ -1,35 +1,86 @@
 <%- include('../partials/head') %>
   </head>
-  <body>
+  <body class="bg-surface-50 min-h-screen flex flex-col">
     <%- include('../partials/nav') %>
-    <main class="container mx-auto bg-white shadow-lg rounded-lg p-8 mt-10 max-w-6xl">
-      <h2 class="text-3xl text-red-500 font-bold text-center mb-6">
-        Hey Host! Here are your homes:
-      </h2>
-      <div class="flex flex-wrap justify-center gap-6">
+    
+    <main class="container mx-auto px-4 py-12 flex-1 animate-fade-in">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+        <div>
+          <h1 class="text-3xl font-bold text-surface-900">Your Hosting Dashboard</h1>
+          <p class="text-surface-500 font-medium">Manage your properties and bookings</p>
+        </div>
+        <a href="/host/add-home" class="btn-primary flex items-center gap-2 self-start md:self-auto">
+          <i class="fa-solid fa-plus text-sm"></i>
+          <span>Add New Property</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
         <% registeredHomes.forEach(home => { %>
-          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300 w-full max-w-sm">
-            <img src="<%= home.photo %>" alt="<%= home.houseName %>" class="w-full h-48 object-cover">
-            <div class="p-4">
-              <h3 class="text-xl font-semibold text-gray-800 mb-2"><%= home.houseName %></h3>
-              <p class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt mr-2"></i><%= home.location %></p>
-              <div class="flex justify-between items-center mb-2">
-                <span class="text-lg font-bold text-red-500">Rs<%= home.price %> / night</span>
-                <div class="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-yellow-400 mr-1">
-                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
-                  </svg>
-                  <span class="text-gray-700"><%= home.rating %></span>
+          <div class="group bg-white rounded-3xl overflow-hidden border border-surface-100 shadow-sm hover:shadow-premium transition-all duration-300">
+            <!-- Image -->
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img src="<%= home.photo %>" alt="<%= home.houseName %>" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+              <div class="absolute top-3 left-3 bg-brand text-white text-[10px] font-bold uppercase py-1 px-2 rounded-md shadow-lg">
+                Active Listing
+              </div>
+            </div>
+
+            <!-- Details -->
+            <div class="p-5">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="font-bold text-surface-900 truncate pr-2"><%= home.houseName %></h3>
+                <div class="flex items-center gap-1">
+                  <i class="fa-solid fa-star text-[10px] text-surface-900"></i>
+                  <span class="text-sm font-semibold text-surface-600"><%= home.rating %></span>
                 </div>
               </div>
-              <a href="/host/edit-home/<%=home._id%>?editing=true" class="bg-blue-500 p-2">Edit</a>
-              <form action="/host/delete-home/<%= home._id %>" method="POST">
-                <button type="submit" class="bg-red-500 p-2">Delete</button>
-              </form>
+              
+              <p class="text-surface-400 text-sm font-medium mb-4 flex items-center gap-1">
+                <i class="fa-solid fa-location-dot text-xs"></i>
+                <%= home.location %>
+              </p>
+
+              <div class="flex items-center justify-between pt-4 border-t border-surface-50">
+                <div class="flex flex-col">
+                  <span class="text-xs font-bold text-surface-400 uppercase">Per Night</span>
+                  <span class="font-bold text-surface-900">Rs<%= home.price %></span>
+                </div>
+                
+                <div class="flex gap-2">
+                  <a href="/host/edit-home/<%=home._id%>?editing=true" class="w-10 h-10 rounded-xl bg-surface-50 text-surface-600 flex items-center justify-center hover:bg-brand hover:text-white transition-all shadow-sm">
+                    <i class="fa-solid fa-pen-to-square text-sm"></i>
+                  </a>
+                  <form action="/host/delete-home/<%= home._id %>" method="POST" onsubmit="return confirm('Release this listing from airbnb?')">
+                    <button type="submit" class="w-10 h-10 rounded-xl bg-surface-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                      <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         <% }) %>
       </div>
+
+      <% if (registeredHomes.length === 0) { %>
+        <div class="flex flex-col items-center justify-center py-20 text-center bg-white rounded-3xl border border-dashed border-surface-200">
+          <div class="w-16 h-16 bg-surface-50 rounded-full flex items-center justify-center mb-4">
+            <i class="fa-solid fa-house-chimney-medical text-2xl text-surface-200"></i>
+          </div>
+          <h2 class="text-xl font-semibold text-surface-900">No properties listed yet</h2>
+          <p class="text-surface-400 mt-2 max-w-xs">Start your hosting journey by adding your first property to airbnb.</p>
+          <a href="/host/add-home" class="btn-primary mt-6">Create Your First Listing</a>
+        </div>
+      <% } %>
     </main>
+
+    <style>
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+    </style>
   </body>
 </html>
