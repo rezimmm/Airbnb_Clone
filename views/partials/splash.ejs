@@ -1,0 +1,367 @@
+<!-- ====================================================
+     AuraStay — Splash Screen
+     Shows once per browser session (stored in sessionStorage).
+     Auto-dismisses after 3 s with a smooth fade-out.
+====================================================== -->
+<div id="aurastay-splash" aria-hidden="true" style="
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #0d0d0d;
+  font-family: 'Outfit', 'Inter', sans-serif;
+">
+
+  <!-- ── Animated gradient orbs ───────────────────── -->
+  <div class="splash-orb splash-orb-1"></div>
+  <div class="splash-orb splash-orb-2"></div>
+  <div class="splash-orb splash-orb-3"></div>
+
+  <!-- ── Noise / grain overlay ─────────────────────── -->
+  <div class="splash-grain"></div>
+
+  <!-- ── Main card ─────────────────────────────────── -->
+  <div class="splash-card" id="splash-card">
+
+    <!-- Icon badge -->
+    <div class="splash-icon-ring">
+      <div class="splash-icon-badge">
+        <i class="fa-solid fa-sparkles splash-sparkle-icon"></i>
+      </div>
+    </div>
+
+    <!-- Brand name -->
+    <h1 class="splash-title">
+      <span class="splash-title-aura">Aura</span><span class="splash-title-stay">Stay</span>
+    </h1>
+
+    <!-- Tagline -->
+    <p class="splash-tagline">Experience the Extraordinary</p>
+
+    <!-- Animated word-cycle -->
+    <div class="splash-words-wrap">
+      <span class="splash-word" id="splash-word">Beachside Villas</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="splash-progress-track">
+      <div class="splash-progress-fill" id="splash-progress"></div>
+    </div>
+
+    <!-- Skip button -->
+    <button id="splash-skip" class="splash-skip" onclick="dismissSplash()" aria-label="Skip intro">
+      <i class="fa-solid fa-arrow-right-long"></i>&nbsp; Enter AuraStay
+    </button>
+
+  </div>
+
+  <!-- ── Floating property-type pills ──────────────── -->
+  <div class="splash-pill splash-pill-1"><i class="fa-solid fa-water"></i> Beachside</div>
+  <div class="splash-pill splash-pill-2"><i class="fa-solid fa-snowflake"></i> Arctic</div>
+  <div class="splash-pill splash-pill-3"><i class="fa-solid fa-crown"></i> Luxe</div>
+  <div class="splash-pill splash-pill-4"><i class="fa-solid fa-tree"></i> Cabins</div>
+  <div class="splash-pill splash-pill-5"><i class="fa-solid fa-mountain-sun"></i> Views</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     Styles  (pure CSS — no Tailwind needed here so
+     the splash works before output.css loads)
+══════════════════════════════════════════════════ -->
+<style>
+  /* ── Reset body scroll while splash is visible ── */
+  body.splash-open { overflow: hidden; }
+
+  /* ── Orbs ──────────────────────────────────────── */
+  .splash-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: splash-orb-drift 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .splash-orb-1 {
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, #FF385C 0%, #BD1E59 60%, transparent 100%);
+    top: -120px; left: -100px;
+    animation-delay: 0s;
+  }
+  .splash-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #FF5A5F 0%, #ff8a65 60%, transparent 100%);
+    bottom: -80px; right: -80px;
+    animation-delay: -3s;
+  }
+  .splash-orb-3 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, #c2185b 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: -6s;
+    opacity: 0.2;
+  }
+  @keyframes splash-orb-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(40px, 30px) scale(1.08); }
+  }
+  .splash-orb-3 {
+    animation-name: splash-orb-pulse;
+  }
+  @keyframes splash-orb-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+    50%       { transform: translate(-50%, -50%) scale(1.4); opacity: 0.35; }
+  }
+
+  /* ── Grain overlay ──────────────────────────────── */
+  .splash-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ── Card ───────────────────────────────────────── */
+  .splash-card {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2.5rem 2.5rem;
+    border-radius: 2rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,56,92,0.15) inset;
+    max-width: 420px;
+    width: 90vw;
+    animation: splash-card-in 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  @keyframes splash-card-in {
+    from { opacity: 0; transform: translateY(32px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+
+  /* ── Icon ring ──────────────────────────────────── */
+  .splash-icon-ring {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #FF385C, #FF5A5F, #c2185b, #FF385C);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem;
+    animation: splash-spin-ring 4s linear infinite;
+    box-shadow: 0 0 40px rgba(255,56,92,0.5);
+  }
+  @keyframes splash-spin-ring {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .splash-icon-badge {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: #0d0d0d;
+    display: flex; align-items: center; justify-content: center;
+    animation: splash-spin-ring 4s linear infinite reverse; /* counter-rotate so icon stays upright */
+  }
+  .splash-sparkle-icon {
+    font-size: 1.75rem;
+    background: linear-gradient(135deg, #FF385C, #FF8a65);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── Title ──────────────────────────────────────── */
+  .splash-title {
+    font-size: clamp(2.8rem, 8vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 0.5rem;
+  }
+  .splash-title-aura {
+    background: linear-gradient(135deg, #FF385C 0%, #FF8a65 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .splash-title-stay { color: #ffffff; }
+
+  /* ── Tagline ────────────────────────────────────── */
+  .splash-tagline {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 1.75rem;
+  }
+
+  /* ── Cycling words ──────────────────────────────── */
+  .splash-words-wrap {
+    height: 2rem;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    display: flex; align-items: center;
+  }
+  .splash-word {
+    color: rgba(255,255,255,0.75);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .splash-word.fade-out { opacity: 0; transform: translateY(-8px); }
+  .splash-word.fade-in  { opacity: 0; transform: translateY(8px); }
+
+  /* ── Progress bar ───────────────────────────────── */
+  .splash-progress-track {
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+  .splash-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #FF385C, #FF8a65);
+    border-radius: 999px;
+    transition: width 3s linear;
+  }
+
+  /* ── Skip button ────────────────────────────────── */
+  .splash-skip {
+    background: linear-gradient(135deg, #FF385C, #BD1E59);
+    color: #fff;
+    border: none;
+    padding: 0.7rem 2rem;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 4px 20px rgba(255,56,92,0.45);
+  }
+  .splash-skip:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 28px rgba(255,56,92,0.55);
+  }
+  .splash-skip:active { transform: scale(0.97); }
+
+  /* ── Floating pills ─────────────────────────────── */
+  .splash-pill {
+    position: absolute;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+    color: rgba(255,255,255,0.8);
+    padding: 0.45rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex; gap: 0.4rem; align-items: center;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: pill-float 6s ease-in-out infinite alternate;
+  }
+  .splash-pill i { color: #FF385C; }
+
+  .splash-pill-1 { top: 14%; left: 4%;  animation-delay: 0s;    animation-duration: 5.5s; }
+  .splash-pill-2 { top: 8%;  right: 5%; animation-delay: -1.5s; animation-duration: 6.5s; }
+  .splash-pill-3 { bottom: 22%; left: 3%; animation-delay: -3s; animation-duration: 7s; }
+  .splash-pill-4 { bottom: 14%; right: 4%; animation-delay: -2s; animation-duration: 5s; }
+  .splash-pill-5 { top: 50%; right: 3%; transform: translateY(-50%); animation-delay: -4s; animation-duration: 6s; }
+
+  @keyframes pill-float {
+    from { transform: translateY(0px); }
+    to   { transform: translateY(-14px); }
+  }
+  /* Override transform for pill-5 */
+  .splash-pill-5 { animation-name: pill-float-center; }
+  @keyframes pill-float-center {
+    from { transform: translateY(calc(-50% + 0px)); }
+    to   { transform: translateY(calc(-50% - 14px)); }
+  }
+
+  /* ── Dismiss transition ─────────────────────────── */
+  #aurastay-splash.splash-hiding {
+    animation: splash-fade-out 0.55s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes splash-fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; pointer-events: none; }
+  }
+
+  /* ── Responsive: hide floating pills on tiny screens ── */
+  @media (max-width: 480px) {
+    .splash-pill { display: none; }
+  }
+</style>
+
+<!-- ══════════════════════════════════════════════════
+     Script
+══════════════════════════════════════════════════ -->
+<script>
+  (function () {
+    var SPLASH_KEY = 'aurastay_splashed';
+    var splash     = document.getElementById('aurastay-splash');
+    var progress   = document.getElementById('splash-progress');
+    var wordEl     = document.getElementById('splash-word');
+
+    /* ── Skip if already shown this session ── */
+    if (sessionStorage.getItem(SPLASH_KEY)) {
+      splash.remove();
+      return;
+    }
+
+    /* ── Lock body scroll ── */
+    document.body.classList.add('splash-open');
+
+    /* ── Kick off progress bar fill ── */
+    requestAnimationFrame(function () {
+      progress.style.width = '100%';
+    });
+
+    /* ── Cycle property-type words ── */
+    var words   = ['Beachside Villas', 'Arctic Retreats', 'Luxe Escapes', 'Mountain Cabins', 'Scenic Views', 'Trending Stays'];
+    var wordIdx = 0;
+
+    function cycleWord () {
+      wordEl.classList.add('fade-out');
+      setTimeout(function () {
+        wordIdx = (wordIdx + 1) % words.length;
+        wordEl.textContent = words[wordIdx];
+        wordEl.classList.remove('fade-out');
+        wordEl.classList.add('fade-in');
+        requestAnimationFrame(function () {
+          wordEl.classList.remove('fade-in');
+        });
+      }, 400);
+    }
+    var wordTimer = setInterval(cycleWord, 1400);
+
+    /* ── Auto-dismiss after 3 s ── */
+    var autoTimer = setTimeout(function () { dismissSplash(); }, 3000);
+
+    /* ── Dismiss function (also called by skip btn) ── */
+    window.dismissSplash = function () {
+      clearTimeout(autoTimer);
+      clearInterval(wordTimer);
+      sessionStorage.setItem(SPLASH_KEY, '1');
+      splash.classList.add('splash-hiding');
+      document.body.classList.remove('splash-open');
+      splash.addEventListener('animationend', function () {
+        splash.remove();
+      }, { once: true });
+    };
+  })();
+</script>
